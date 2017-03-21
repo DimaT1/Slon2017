@@ -9,58 +9,67 @@ rules = """
 "#" - дырка
 """
 
+WHITE_SQUARE = -1
+HOLE_SQUARE = -2
+
+
+def check_square(square):
+    global N, M
+    i, j = square
+    return (0 <= i < N) and (0 <= j < M)
+
+
 #  ввод
-white = []
-black_squares = []
-black_turns = []
-holes = []
 turn = 0
+white_count = 0
+to_paint = deque()
 
 print(message)
 N, M = map(int, input().split())
 print(rules)
+
+Field = [[0 for j in range(M)] for i in range(N)]
+
 for i in range(N):
     line = input()
     for j in range(M):
         if line[j] == '_':
-            white.append((i, j))
+            Field[i][j] = WHITE_SQUARE
+            white_count += 1
         elif line[j] == '0':
-            black_squares.append((i, j))
-            black_turns.append(turn)
+            Field[i][j] = turn
+            to_paint.append((i, j))
         else:
-            holes.append((i, j))
+            Field[i][j] = HOLE_SQUARE
 
 # раскраска
-to_paint = deque((black_squares[i], black_turns[i]) for i in range(len(black_squares)))
 max_turn = turn
-while to_paint and white:
-    square, turn = to_paint.popleft()
+while to_paint and white_count:
+    square = to_paint.popleft()
+    turn = Field[square[0]][square[1]]
+
     moves = ((+1, 0), (-1, 0), (0, +1), (0, -1))
 
     for move in moves:
         new_square = (square[0] + move[0], square[1] + move[1])
-        if new_square in white:
-            to_paint.append((new_square, turn + 1))
-            white.remove(new_square)
-            black_squares.append(new_square)
-            black_turns.append(turn + 1)
-            max_turn = turn + 1
+
+        if check_square(new_square):
+            if Field[new_square[0]][new_square[1]] == WHITE_SQUARE:
+                to_paint.append(new_square)
+                Field[new_square[0]][new_square[1]] = turn + 1
+                white_count -= 1
+                max_turn = turn + 1
 
 # вывод ответа
-if not white:
+if not white_count:
     print("Необходимое число ходов: ", max_turn)
 else:
     print("Невозможно раскрасить")
 
 # вывод поля
 '''
-for i in range(N):
-    for j in range(M):
-        if (i, j) in white:
-            print('_', end=' ')
-        elif (i, j) in holes:
-            print('#', end=' ')
-        else:
-            print(black_turns[black_squares.index((i, j))], end=' ')
+for i in Field:
+    for j in i:
+        print(j, end=' ')
     print()
 '''
