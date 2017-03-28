@@ -45,18 +45,18 @@ int main() {
             min_len = trip_len;
             answ = "";
             for (auto i : trip) {
-                answ += IntToString(i + 1);//std::to_string(i + 1);
+                answ += IntToString(i + 1);//std::to_string(i);
             }
             answ += '\n';
 
         } else if (trip_len == min_len) {
             for (auto i : trip) {
-                answ += IntToString(i + 1);//std::to_string(i + 1);
+                answ += IntToString(i + 1);//std::to_string(i);
             }
             answ += '\n';
         }
 
-    } while (std::next_permutation(trip.begin(), trip.end()));
+    } while (std::next_permutation(trip.begin() + 1, trip.end()));
 
     std::cout << min_len << std::endl << answ;
     return 0;
