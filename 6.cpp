@@ -45,13 +45,13 @@ int main() {
             min_len = trip_len;
             answ = "";
             for (auto i : trip) {
-                answ += IntToString(i + 1);//std::to_string(i);
+                answ += IntToString(i + 1);//std::to_string(i + 1);
             }
             answ += '\n';
 
         } else if (trip_len == min_len) {
             for (auto i : trip) {
-                answ += IntToString(i + 1);//std::to_string(i);
+                answ += IntToString(i + 1);//std::to_string(i + 1);
             }
             answ += '\n';
         }
